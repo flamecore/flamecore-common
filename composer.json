@@ -1,0 +1,47 @@
+{
+    "name": "flamecore/common",
+    "type": "library",
+    "description": "Lightweight utilities for common use cases",
+    "keywords": ["flamecore", "common", "utilities", "arrays", "strings", "date-time", "format", "traits"],
+    "homepage": "https://www.flamecore.org",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/flamecore/flamecore-common/issues",
+        "wiki": "https://github.com/flamecore/flamecore-common/wiki"
+    },
+    "authors": [
+        {
+            "name": "Christian Neff",
+            "email": "christian.neff@gmail.com",
+            "homepage": "https://www.secondtruth.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "^9.0",
+        "symplify/easy-coding-standard": "^10.2"
+    },
+    "suggest": {
+        "ext-mbstring": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlameCore\\Common\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FlameCore\\Common\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "ecs check",
+        "fix-style": "ecs check --fix"
+    }
+}
