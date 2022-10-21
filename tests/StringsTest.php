@@ -325,9 +325,9 @@ class StringsTest extends TestCase
     public function testReplaceDynamically()
     {
         $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', fn () => '@'));
-        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', \Closure::fromCallable(__NAMESPACE__ . '\Strings\Test::cb')));
-        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', ['#[e-l]+#'], \Closure::fromCallable(__NAMESPACE__ . '\Strings\Test::cb')));
-        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', [__NAMESPACE__ . '\Strings\Test', 'cb']));
+        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', \Closure::fromCallable(StringsTest\Test::class . '::cb')));
+        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', ['#[e-l]+#'], \Closure::fromCallable(StringsTest\Test::class . '::cb')));
+        $this->assertSame('@o wor@d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', [StringsTest\Test::class, 'cb']));
 
         // flags
         $this->assertSame('hell0o worl9d!', Strings::replaceDynamically('hello world!', '#[e-l]+#', fn ($m) => implode('', $m[0]), captureOffset: true));

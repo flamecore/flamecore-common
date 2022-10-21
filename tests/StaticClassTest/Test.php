@@ -8,15 +8,10 @@
  * above copyright notice and this permission notice appear in all copies.
  */
 
-namespace FlameCore\Common\Tests\StaticClass;
+namespace FlameCore\Common\Tests\StaticClassTest;
 
 use FlameCore\Common\StaticClass;
 
-/**
- * The Test class.
- *
- * @author Christian Neff <christian.neff@gmail.com>
- */
 class Test
 {
     use StaticClass;

@@ -8,8 +8,12 @@
  * above copyright notice and this permission notice appear in all copies.
  */
 
-namespace FlameCore\Common\Tests\Callback;
+namespace FlameCore\Common\Tests\StringsTest;
 
-class TestChildClass extends TestClass
+class Test
 {
+    public static function cb()
+    {
+        return '@';
+    }
 }

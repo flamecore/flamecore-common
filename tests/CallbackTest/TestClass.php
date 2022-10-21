@@ -8,13 +8,8 @@
  * above copyright notice and this permission notice appear in all copies.
  */
 
-namespace FlameCore\Common\Tests\Callback;
+namespace FlameCore\Common\Tests\CallbackTest;
 
-/**
- * The TestClass class.
- *
- * @author Christian Neff <christian.neff@gmail.com>
- */
 class TestClass
 {
     public function __invoke($a)

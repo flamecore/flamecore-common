@@ -11,7 +11,7 @@
 namespace FlameCore\Common\Tests;
 
 use FlameCore\Common\Callback;
-use FlameCore\Common\Tests\Callback\TestClass;
+use FlameCore\Common\Tests\CallbackTest\TestClass;
 use PHPUnit\Framework\TestCase;
 
 class CallbackTest extends TestCase
@@ -143,7 +143,7 @@ class CallbackTest extends TestCase
             $a = __FUNCTION__;
             return $a;
         };
-        $this->assertSame('FlameCore\Common\Tests\{closure}', $this->toReflName(Callback::toReflection($closure)));
+        $this->assertSame(__NAMESPACE__ . '\{closure}', $this->toReflName(Callback::toReflection($closure)));
 
         // invokable object
         $test = new TestClass();

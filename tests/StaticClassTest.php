@@ -10,7 +10,7 @@
 
 namespace FlameCore\Common\Tests;
 
-use FlameCore\Common\Tests\StaticClass\Test;
+use FlameCore\Common\Tests\StaticClassTest\Test;
 use PHPUnit\Framework\TestCase;
 
 class StaticClassTest extends TestCase
