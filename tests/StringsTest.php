@@ -778,4 +778,17 @@ class StringsTest extends TestCase
             }
         }
     }
+
+    public function testFromIso88591()
+    {
+        $this->assertSame('Aa!$', Strings::fromIso88591('Aa!$')); // ASCII
+        $this->assertSame("Àà", Strings::fromIso88591("\xC0\xE0")); // Letters with accents
+    }
+
+    public function testToIso88591()
+    {
+        $this->assertSame('Aa!$', Strings::toIso88591('Aa!$')); // ASCII
+        $this->assertSame('?', Strings::toIso88591('€')); // Euro sign
+        $this->assertSame('?', Strings::toIso88591("\xF0\x9F\x98\x8A")); // "Smiling face with smiling eyes" emoji
+    }
 }

@@ -37,7 +37,7 @@ class Strings
     {
         return function_exists('mb_strlen')
             ? mb_strlen($string, 'UTF-8')
-            : strlen(utf8_decode($string));
+            : strlen(self::toIso88591($string));
     }
 
     /**
@@ -54,45 +54,6 @@ class Strings
         $pos = self::pos($haystack, $needle, $nth);
 
         return $pos === null ? null : self::length(substr($haystack, 0, $pos));
-    }
-
-    /**
-     * Gets the position in bytes of the `$nth` occurrence of the given substring in a string.
-     *
-     * @param string $haystack The string to search in
-     * @param string $needle   The substring to search for in the `$haystack`
-     * @param int    $nth      Search from the `$nth` occurrence of the substring. A negative value of `$nth` means searching from the end.
-     *
-     * @return int|null Returns the position of the substring or `NULL` if the `$needle` was not found.
-     */
-    private static function pos(string $haystack, string $needle, int $nth = 1): ?int
-    {
-        if ($nth === 0) {
-            return null;
-        }
-
-        if ($nth > 0) {
-            if ($needle === '') {
-                return 0;
-            }
-
-            $pos = 0;
-            while (($pos = strpos($haystack, $needle, $pos)) !== false && --$nth) {
-                $pos++;
-            }
-        } else {
-            $len = strlen($haystack);
-            if ($needle === '') {
-                return $len;
-            }
-
-            $pos = $len - 1;
-            while (($pos = strrpos($haystack, $needle, $pos - $len)) !== false && ++$nth) {
-                $pos--;
-            }
-        }
-
-        return $pos !== false ? $pos : null;
     }
 
     /**
@@ -156,7 +117,9 @@ class Strings
             return mb_substr($string, $offset, $length, 'UTF-8'); // MB is much faster
         } elseif (!extension_loaded('iconv')) {
             throw new NotSupportedException(sprintf('%s() requires extension "iconv" or "mbstring", neither is loaded.', __METHOD__));
-        } elseif ($length === null) {
+        }
+
+        if ($length === null) {
             $length = self::length($string);
         } elseif ($offset < 0 && $length < 0) {
             $offset += self::length($string); // unifies iconv_substr behavior with mb_substr
@@ -529,6 +492,61 @@ class Strings
     }
 
     /**
+     * Converts an ISO-8859-1 string to UTF-8.
+     *
+     * @param string $string The input string
+     */
+    public static function fromIso88591(string $string): string
+    {
+        $string .= $string;
+        $len = \strlen($string);
+
+        for ($i = $len >> 1, $j = 0; $i < $len; ++$i, ++$j) {
+            switch (true) {
+                case $string[$i] < "\x80": $string[$j] = $string[$i]; break;
+                case $string[$i] < "\xC0": $string[$j] = "\xC2"; $string[++$j] = $string[$i]; break;
+                default: $string[$j] = "\xC3"; $string[++$j] = \chr(\ord($string[$i]) - 64); break;
+            }
+        }
+
+        return substr($string, 0, $j);
+    }
+
+    /**
+     * Converts a UTF-8 string to ISO-8859-1.
+     *
+     * @param string $string The input string
+     */
+    public static function toIso88591(string $string): string
+    {
+        $len = \strlen($string);
+
+        for ($i = 0, $j = 0; $i < $len; ++$i, ++$j) {
+            switch ($string[$i] & "\xF0") {
+                case "\xC0":
+                case "\xD0":
+                    $c = (\ord($string[$i] & "\x1F") << 6) | \ord($string[++$i] & "\x3F");
+                    $string[$j] = $c < 256 ? \chr($c) : '?';
+                    break;
+
+                case "\xF0":
+                    ++$i;
+                // no break
+
+                case "\xE0":
+                    $string[$j] = '?';
+                    $i += 2;
+                    break;
+
+                default:
+                    $string[$j] = $string[$i];
+            }
+        }
+
+        return substr($string, 0, $j);
+    }
+
+    /**
      * @param string $function
      * @param array  $args
      *
@@ -548,6 +566,45 @@ class Strings
         }
 
         return $result;
+    }
+
+    /**
+     * Gets the position in bytes of the `$nth` occurrence of the given substring in a string.
+     *
+     * @param string $haystack The string to search in
+     * @param string $needle   The substring to search for in the `$haystack`
+     * @param int    $nth      Search from the `$nth` occurrence of the substring. A negative value of `$nth` means searching from the end.
+     *
+     * @return int|null Returns the position of the substring or `NULL` if the `$needle` was not found.
+     */
+    private static function pos(string $haystack, string $needle, int $nth = 1): ?int
+    {
+        if ($nth === 0) {
+            return null;
+        }
+
+        if ($nth > 0) {
+            if ($needle === '') {
+                return 0;
+            }
+
+            $pos = 0;
+            while (($pos = strpos($haystack, $needle, $pos)) !== false && --$nth) {
+                $pos++;
+            }
+        } else {
+            $len = strlen($haystack);
+            if ($needle === '') {
+                return $len;
+            }
+
+            $pos = $len - 1;
+            while (($pos = strrpos($haystack, $needle, $pos - $len)) !== false && ++$nth) {
+                $pos--;
+            }
+        }
+
+        return $pos !== false ? $pos : null;
     }
 
     private static function convertBytesToChars(string $string, array $groups): array
