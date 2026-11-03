@@ -11,10 +11,10 @@ This package contains a set of lightweight utilities for common use cases.
 It provides the following extensions to core PHP functionality:
 
 - **Contracts** – Some common interfaces for interoperability
+- **Exceptions** – A common exception hierarchy (`ExceptionInterface`)
 - Class **Strings** – Many useful string and text functions
 - Class **Arrays** – Functions to check and manipulate arrays
-- Class **DateTime** – Advanced class for managing times and dates
-- Class **Format** – Formatting helpers for dates/times and numbers
+- Class **Arrays\ArrayEntry** – Access nested array entries by key or path
 - Class **Callback** – PHP callback related functions
 - Trait **StaticClass** – Create purely static classes
 
@@ -33,6 +33,7 @@ To install the library, run the following command and you will get the latest ve
 ## Requirements
 
 - You must have at least PHP version 8.0 installed on your system.
+- Recommended: the `mbstring`, `iconv` and `intl` extensions for full Unicode support in `Strings`.
 
 
 ## Security

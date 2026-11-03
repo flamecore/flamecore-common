@@ -2,7 +2,7 @@
     "name": "flamecore/common",
     "type": "library",
     "description": "Lightweight utilities for common use cases",
-    "keywords": ["flamecore", "common", "utilities", "arrays", "strings", "date-time", "format", "traits"],
+    "keywords": ["flamecore", "common", "utilities", "arrays", "strings", "callback", "traits"],
     "homepage": "https://www.flamecore.org",
     "license": "MIT",
     "support": {
