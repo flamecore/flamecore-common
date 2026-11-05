@@ -53,13 +53,13 @@ class CallbackTest extends TestCase
     {
         Callback::invokeSafe('preg_match', ['ab', 'foo'], fn () => false);
 
-        $this->assertStringContainsString('Delimiter must not be alphanumeric or backslash', self::$lastError);
+        $this->assertStringContainsString('Delimiter must not be alphanumeric', self::$lastError);
     }
 
     public function testInvokeSafeWithErrorToException()
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Delimiter must not be alphanumeric or backslash');
+        $this->expectExceptionMessage('Delimiter must not be alphanumeric');
 
         Callback::invokeSafe('preg_match', ['ab', 'foo'], function ($message, $severity) {
             throw new \Exception($message, $severity);
@@ -143,7 +143,12 @@ class CallbackTest extends TestCase
             $a = __FUNCTION__;
             return $a;
         };
-        $this->assertSame(__NAMESPACE__ . '\{closure}', $this->toReflName(Callback::toReflection($closure)));
+        if (\PHP_VERSION_ID >= 80400) {
+            // PHP 8.4+ includes the enclosing method and line in closure names
+            $this->assertStringStartsWith('{closure:' . __METHOD__ . '():', $this->toReflName(Callback::toReflection($closure)));
+        } else {
+            $this->assertSame(__NAMESPACE__ . '\{closure}', $this->toReflName(Callback::toReflection($closure)));
+        }
 
         // invokable object
         $test = new TestClass();
